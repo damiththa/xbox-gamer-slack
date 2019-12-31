@@ -1,10 +1,13 @@
 import json
 
+def slack_posting_webhook(event, context):
 
-def hello(event, context):
+    print ('If I see this, set up is done correctly!')
+
+    # TODO: This should be more meaningful
+    # aws lambda return response
     body = {
-        "message": "Go Serverless v1.0! Your function executed successfully!",
-        "input": event
+        "COME_BACK_TO_THIS": "Come back to this message"
     }
 
     response = {
@@ -13,12 +16,3 @@ def hello(event, context):
     }
 
     return response
-
-    # Use this code if you don't use the http event with the LAMBDA-PROXY
-    # integration
-    """
-    return {
-        "message": "Go Serverless v1.0! Your function executed successfully!",
-        "event": event
-    }
-    """
