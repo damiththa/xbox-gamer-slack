@@ -1,0 +1,4 @@
+
+slack_slash-commands/__pycache__/
+
+slack_slash-commands/secrets.env.yml

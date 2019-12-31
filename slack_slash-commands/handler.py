@@ -1,10 +1,26 @@
 import json
+import os
 
+import requests
 
-def hello(event, context):
+#xbox
+XBOX_PROFILE_ID = os.environ['XBOX_PROFILE_ID']
+
+#xboxapi
+XBOX_API_BASE_URL = os.environ['XBOX_API_BASE_URL']
+XBOX_API_KEY = os.environ['XBOX_API_KEY']
+
+def get_xboxgamer_info(event, context):
+
+    # url
+    url = XBOX_API_BASE_URL + XBOX_PROFILE_ID
+
+    get_gamercard(url) # Getting my gamercard from XBOXAPI
+
+    # TODO: This should be more meaningful
+    # aws lambda return response
     body = {
-        "message": "Go Serverless v1.0! Your function executed successfully!",
-        "input": event
+        "COME_BACK_TO_THIS": "Come back to this message"
     }
 
     response = {
@@ -14,11 +30,19 @@ def hello(event, context):
 
     return response
 
-    # Use this code if you don't use the http event with the LAMBDA-PROXY
-    # integration
-    """
-    return {
-        "message": "Go Serverless v1.0! Your function executed successfully!",
-        "event": event
+# Getting my gamercard from XBOXAPI
+def get_gamercard(url):
+    url = url + '/gamercard'
+    # print (url)
+    headers = {
+        'Content-Type' : 'application/json',
+        "X-Auth" : XBOX_API_KEY
     }
-    """
+    payload = {
+        'message': 'This is just a dummy message, probably not needed'
+    }
+
+    res = requests.get(url, headers=headers, data=json.dumps(payload))
+    print ('XboxAPI get status: {}' .format(res.status_code))
+    
+    print (res.content)
