@@ -19,3 +19,7 @@ functions:
   get_xboxgamer_info:
     handler: handler.get_xboxgamer_info
     description: Function description goes here
+    events:
+      - http:
+          method: POST
+          path: slash-commands-post
