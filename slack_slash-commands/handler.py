@@ -15,16 +15,21 @@ def get_xboxgamer_info(event, context):
     # url
     url = XBOX_API_BASE_URL + XBOX_PROFILE_ID
 
-    get_gamercard(url) # Getting my gamercard from XBOXAPI
+    r = get_gamercard(url) # Getting my gamercard from XBOXAPI
+    print (r.status_code)
+    print (r.content)
 
-    # TODO: This should be more meaningful
-    # aws lambda return response
+    # TODO: Need to better handle non-200 response
+    if r.status_code != 200:
+        print ('something went wrong in api return')
+
+    # NOTEME: This is the message reply message body
     body = {
-        "COME_BACK_TO_THIS": "Come back to this message"
+        "returnBody": "Come back to this message"
     }
 
     response = {
-        "statusCode": 200,
+        "statusCode": 200, # CHECKME: see whether this status code can be dynamic
         "body": json.dumps(body)
     }
 
@@ -43,6 +48,8 @@ def get_gamercard(url):
     }
 
     res = requests.get(url, headers=headers, data=json.dumps(payload))
-    print ('XboxAPI get status: {}' .format(res.status_code))
-    
-    print (res.content)
+
+    # print ('XboxAPI get status: {}' .format(res.status_code))
+    # print (res.content)
+
+    return res
