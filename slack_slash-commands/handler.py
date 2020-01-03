@@ -10,10 +10,19 @@ XBOX_PROFILE_ID = os.environ['XBOX_PROFILE_ID']
 XBOX_API_BASE_URL = os.environ['XBOX_API_BASE_URL']
 XBOX_API_KEY = os.environ['XBOX_API_KEY']
 
+# slack
+SLACK_TOKEN = os.environ['SLACK_TOKEN']
+
 def get_xboxgamer_info(event, context):
 
-    print (event)
-    # TODO: should do a auth code check
+    # print (event['body'])
+
+    # getting (by slicing) passed in token from body string
+    tockenCode = event['body'][6:event['body'].find("&")]
+    # print (tockenCode)
+
+    # check token :TODO: implement this later
+    token_check(tockenCode)
 
     # url
     url = XBOX_API_BASE_URL + XBOX_PROFILE_ID
@@ -31,14 +40,14 @@ def get_xboxgamer_info(event, context):
 
     # print (xboxapi_return['gamertag']) # gamertag
 
-    # NOTEME: This is the message reply message body
-    body = {
+    # TODO: have return blocks in a more ordered way
+    gamercard_slack_block = {
         "blocks": [
             {
                 "type": "section",
                 "text": {
                     "type": "mrkdwn",
-                    "text": "Hello " + str(xboxapi_return['name']) + " here is your gamercard."
+                    "text": "Hey, *_" + str(xboxapi_return['name']) + "_* here is your gamercard."
                 }
             },
             {
@@ -49,7 +58,7 @@ def get_xboxgamer_info(event, context):
                 "block_id": "section567",
                 "text": {
                     "type": "mrkdwn",
-                    "text": "\n *gamertag: *" +  str(xboxapi_return['gamertag']) + "\n *motto: *" + "_"+str(xboxapi_return['motto'])+"_" + "\n *gamerscore: *" + str(xboxapi_return['gamerscore'])
+                    "text": "\n *gamertag: *" +  str(xboxapi_return['gamertag']) + "\n *motto: * _" + str(xboxapi_return['motto']) + "_\n *gamerscore: *" + str(xboxapi_return['gamerscore'])
                 },
                 "accessory": {
                     "type": "image",
@@ -60,12 +69,23 @@ def get_xboxgamer_info(event, context):
         ]
     }
 
+    # NOTEME: This is the message reply message body
+    body = gamercard_slack_block
+
     response = {
         "statusCode": 200, # CHECKME: see whether this status code can be dynamic
         "body": json.dumps(body)
     }
 
     return response
+
+# checking token
+def token_check(tokenCode):
+    tokenCode_check = True # default value
+    if SLACK_TOKEN != tokenCode:
+        tokenCode_check = False
+    
+    return tokenCode_check
 
 # Getting my gamercard from XBOXAPI
 def get_gamercard(url):
